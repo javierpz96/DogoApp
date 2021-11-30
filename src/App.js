@@ -1,23 +1,53 @@
-import logo from './logo.svg';
+import React,{useState,useEffect} from 'react';
 import './App.css';
+import Select from './components/Select';
+import Card from './components/Card';
+import getDog from './helpers/getDog';
+
+
+
+const initialDog = {
+  image: "",
+  breed: {
+    id: 0,
+    name: "",
+    life_span:"",
+    temperament:"",
+  }
+}
+
 
 function App() {
+
+  const [dog,setDog] = useState(initialDog)
+  const [loading,setLoading] = useState(false)
+
+
+  useEffect(()=>{
+    updateDog(0)
+  },[])
+
+
+  const updateDog = (breedId) =>{
+    setLoading(true)
+    getDog(breedId)
+    .then((newDog)=>{
+      setDog(newDog)
+      setLoading(false)
+      
+    })
+  }
+  
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+        <Select updateDog={updateDog}></Select>
+
+        <Card getdog={getDog} dog={dog} updateDog={updateDog} loading={loading}></Card>
+
+        
+        
     </div>
   );
 }
